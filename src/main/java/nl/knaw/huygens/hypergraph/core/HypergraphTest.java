@@ -1,4 +1,4 @@
-package nl.knaw.huygens.hypergraph;
+package nl.knaw.huygens.hypergraph.core;
 
 import nl.knaw.huygens.hypergraph.core.Hypergraph;
 import org.junit.jupiter.api.Test;

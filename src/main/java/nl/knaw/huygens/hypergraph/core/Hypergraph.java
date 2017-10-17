@@ -48,17 +48,26 @@ public class Hypergraph<N, H> {
         // set incoming
         for (N target : targets) {
             if (GraphType.ORDERED == this.graphType) {
-                incomingEdges.putIfAbsent(target, new ArrayList<>()).add(edge);
+                incomingEdges.computeIfAbsent(target, e -> new ArrayList<>()).add(edge);
             } else {
-                incomingEdges.putIfAbsent(target, new HashSet<>()).add(edge);
+                incomingEdges.computeIfAbsent(target, e -> new HashSet<>()).add(edge);
             }
         }
         // set outgoing
         if (GraphType.ORDERED == this.graphType) {
-            outgoingEdges.putIfAbsent(source, new ArrayList<>()).add(edge);
+            outgoingEdges.computeIfAbsent(source, e -> new ArrayList<>()).add(edge);
         } else {
-            outgoingEdges.putIfAbsent(source, new HashSet<>()).add(edge);
+            outgoingEdges.computeIfAbsent(source, e -> new HashSet<>()).add(edge);
         }
+    }
+
+    Collection<N> getTargets(H e) {
+        return targetNodes.get(e);
+    }
+
+
+    Collection<H> getOutgoingEdges(N node) {
+        return outgoingEdges.get(node);
     }
 
     public enum GraphType {
