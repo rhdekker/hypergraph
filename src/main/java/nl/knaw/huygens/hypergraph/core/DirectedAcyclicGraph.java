@@ -3,6 +3,7 @@ package nl.knaw.huygens.hypergraph.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Stack;
 
 // nu zou ik wel topological sort willen hebben
 // teveel gedoe, kan ook gewoon een root node maken
@@ -27,17 +28,18 @@ public class DirectedAcyclicGraph<N, E> extends Hypergraph<N, E> {
     }
 
     public List<N> traverse() {
-        N start = root;
+        Stack<N> nodesToVisit = new Stack<>();
+        nodesToVisit.add(root);
         List<N> result = new ArrayList<>();
-        result.add(start);
-        Collection<E> outgoingEdges = this.getOutgoingEdges(start);
-        for (E e : outgoingEdges) {
-            result.add(this.getTarget(e));
+        while(!nodesToVisit.isEmpty()) {
+           N pop = nodesToVisit.pop();
+           result.add(pop);
+           Collection<E> outgoingEdges = this.getOutgoingEdges(pop);
+           for (E e : outgoingEdges) {
+               N target = this.getTarget(e);
+               nodesToVisit.add(target);
+           }
         }
-//      //        while (!outgoingEdges.isEmpty()) {
-//        }
-        // de recursie mist nog!
-        // heb een stack nodig! Nou ja voor nu geen zin in..
         return result;
     }
 

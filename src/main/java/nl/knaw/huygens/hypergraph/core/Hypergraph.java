@@ -67,7 +67,7 @@ public class Hypergraph<N, H> {
 
 
     Collection<H> getOutgoingEdges(N node) {
-        return outgoingEdges.get(node);
+        return outgoingEdges.getOrDefault(node, Collections.EMPTY_LIST);
     }
 
     public enum GraphType {
