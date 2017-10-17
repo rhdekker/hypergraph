@@ -7,7 +7,7 @@ import java.util.Stack;
 
 // nu zou ik wel topological sort willen hebben
 // teveel gedoe, kan ook gewoon een root node maken
-public class DirectedAcyclicGraph<N, E> extends Hypergraph<N, E> {
+public class DirectedAcyclicGraph<N> extends Hypergraph<N, TraditionalEdge> {
     private N root;
 
     public DirectedAcyclicGraph() {
@@ -23,7 +23,8 @@ public class DirectedAcyclicGraph<N, E> extends Hypergraph<N, E> {
     }
 
     //Question: do we want labels here?
-    public void addDirectedEdge(E edge, N source, N target) {
+    public void addDirectedEdge(N source, N target) {
+        TraditionalEdge edge = new TraditionalEdge();
         super.addDirectedHyperedge(edge, "", source, target);
     }
 
@@ -34,8 +35,8 @@ public class DirectedAcyclicGraph<N, E> extends Hypergraph<N, E> {
         while(!nodesToVisit.isEmpty()) {
            N pop = nodesToVisit.pop();
            result.add(pop);
-           Collection<E> outgoingEdges = this.getOutgoingEdges(pop);
-           for (E e : outgoingEdges) {
+           Collection<TraditionalEdge> outgoingEdges = this.getOutgoingEdges(pop);
+           for (TraditionalEdge e : outgoingEdges) {
                N target = this.getTarget(e);
                nodesToVisit.add(target);
            }
@@ -43,12 +44,16 @@ public class DirectedAcyclicGraph<N, E> extends Hypergraph<N, E> {
         return result;
     }
 
-    public N getTarget(E e) {
+    public N getTarget(TraditionalEdge e) {
         Collection<N> nodes = super.getTargets(e);
         if (nodes.size()!=1) {
             throw new RuntimeException("trouble!");
         }
         return nodes.iterator().next();
     }
+
+}
+
+class TraditionalEdge {
 
 }
