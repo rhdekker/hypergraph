@@ -10,9 +10,9 @@ public class DirectedAcyclicGraphTest {
     public void testBla() {
         DirectedAcyclicGraph<String> g = new DirectedAcyclicGraph<>();
         g.setRootNode("root");
-        g.addNode("child1");
-        g.addNode("child2");
-        g.addNode("child3");
+        g.addNode("child1", "");
+        g.addNode("child2", "");
+        g.addNode("child3", "");
         g.addDirectedEdge( "root", "child1");
         g.addDirectedEdge( "root", "child2");
 

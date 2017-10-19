@@ -14,8 +14,8 @@ public class DirectedAcyclicGraph<N> extends Hypergraph<N, TraditionalEdge> {
       super(GraphType.ORDERED);
     }
 
-    public void addNode(N node) {
-        super.addNode(node);
+    public void addNode(N node, String label) {
+        super.addNode(node, label);
     }
 
     public void setRootNode(N root) {
