@@ -9,9 +9,11 @@ package nl.knaw.huygens.hypergraph.core;
 
 
 import java.util.*;
+import java.util.function.Function;
 
 public class Hypergraph<N, H> {
     private final GraphType graphType;
+    private final Function<N, Collection<H>> mappingFunction;
     private Set<N> nodes;
     private final Map<N, Collection<H>> incomingEdges;
     private final Map<N, Collection<H>> outgoingEdges;
@@ -29,6 +31,12 @@ public class Hypergraph<N, H> {
         this.targetNodes = new HashMap<>();
         this.edgeLabels = new HashMap<>();
         this.nodeLabels = new HashMap<>();
+        // create switch
+        if (GraphType.ORDERED == this.graphType) {
+            this.mappingFunction = e -> new ArrayList<>();
+        } else {
+            this.mappingFunction = e -> new HashSet<>();
+        }
     }
 
     public void addNode(N node, String label) {
@@ -54,18 +62,10 @@ public class Hypergraph<N, H> {
         }
         // set incoming
         for (N target : targets) {
-            if (GraphType.ORDERED == this.graphType) {
-                incomingEdges.computeIfAbsent(target, e -> new ArrayList<>()).add(edge);
-            } else {
-                incomingEdges.computeIfAbsent(target, e -> new HashSet<>()).add(edge);
-            }
+            incomingEdges.computeIfAbsent(target, mappingFunction).add(edge);
         }
         // set outgoing
-        if (GraphType.ORDERED == this.graphType) {
-            outgoingEdges.computeIfAbsent(source, e -> new ArrayList<>()).add(edge);
-        } else {
-            outgoingEdges.computeIfAbsent(source, e -> new HashSet<>()).add(edge);
-        }
+        outgoingEdges.computeIfAbsent(source, mappingFunction).add(edge);
         // set label
         edgeLabels.put(edge, label);
     }
