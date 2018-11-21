@@ -1,4 +1,4 @@
-package nl.knaw.huygens.hypergraph.nl.knaw.huc.di.hypergraph.core;
+package nl.knaw.huc.di.hypergraph.core;
 
 import java.util.*;
 
