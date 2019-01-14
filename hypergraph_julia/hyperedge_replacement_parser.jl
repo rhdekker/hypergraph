@@ -33,7 +33,53 @@ struct StateMachine
     rules::Dict{String, Array{HyperEdge}}
 end
 
+function find_hyperedge_in_hypergraph_by_label(hypergraph::Array{HyperEdge}, label::String)
+    found = undef
+    for hyperedge in hypergraph
+        if hyperedge.label == label
+            found = hyperedge
+            break
+        end
+    end
+    return found
+end
+
 function he_replace(state_machine::StateMachine, label::String)
+
+    # nu moeten we de ene interne source node van de righthandside van de rule vervangen door de eerse
+    # externe source node van de hypergraph van de state machine
+
+    # De hyperedge in de graph met hetzelfde label moeten we nu zien te vervangen..
+    # Die we moeten we dan eerst zien te vinden; in een kleine graaf kunnen we gewoon de lijst 1 voor 1 aflopen.
+    # In een grotere graaf is een dictonary beter.
+
+    hyperedge_to_replace=find_hyperedge_in_hypergraph_by_label(state_machine.hypergraph, label)
+    println(hyperedge_to_replace)
+
+    # hmmm hoe weet je bij deze aanpak of de nodes goed geconnect zijn?
+    # De enige manier om achter de nodes te komen is door over de edges te lopen en ze er dan
+    # uit te halen
+
+    # In de rules dict zit de righthandside van de rule met label v d left hand side
+    # eerst kijken of er wel een rule is voor ene zekr label
+    # als niet, dan had de vorige al een exceptie gegooid
+    hypergraph_to_replace_with = state_machine.rules[label]
+    println(hypergraph_to_replace_with)
+
+    # we need to create a new subhypergraph
+    # we go over all the hyperedges of the hypergraph to replace with
+    # Eh what to do with multiple hyperedges?
+    # Is it only the first one that has replaceble nodes ?
+    # well if I look at my own real life example (John loves mary), than the answer is no
+    # dus een enkele hyperedge kan 1 of meerdere sources dan wel targets hebben
+    # en er kunnen meerdere hyperedges zijn
+    # We moeten dus op zoek naar al die dingen... voor nu maar even niet..
+
+
+
+
+
+
     println("Do nothing!")
 end
 
