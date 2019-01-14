@@ -28,8 +28,10 @@ struct HyperEdge
     target::Array{String}
 end
 
+const HyperGraph = Array{HyperEdge}
+
 struct StateMachine
-    hypergraph::Array{HyperEdge}
+    hypergraph::HyperGraph
     rules::Dict{String, Array{HyperEdge}}
 end
 
