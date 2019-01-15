@@ -36,6 +36,7 @@ struct StateMachine
     rules::Dict{String, HyperGraph}
 end
 
+# TODO: this can be done with findfirst on array!
 function find_hyperedge_in_hypergraph_by_label(hypergraph::HyperGraph, label::String)
     found = undef
     for hyperedge in hypergraph
@@ -78,10 +79,44 @@ function he_replace(state_machine::StateMachine, label::String)
     # en er kunnen meerdere hyperedges zijn
     # We moeten dus op zoek naar al die dingen... voor nu maar even niet..
 
+    # eerst groeperen we alle inkomende internal ndoes en inkomende external bij elkaar
+
+    # TODO: liever de term source nodes gebruiken
+    # Alle open incoming nodes van de righthandside van de replacement rule zoeken
+    # TODO: moet ook kunnen als een list comprehension
+    result_incoming  = []
+    for he in hypergraph_to_replace_with
+        # for every he that has one or more internal nodes
+        # I want to know the hyperedge and the position of the internal node
+        # for that reason we use enumerate
+        # We create a tuple of the hyperedge and
+        for (idx, source) in enumerate(he.source)
+            if source == "_"
+                push!(result_incoming, (he, idx))
+           end
+        end
+    end
+
+    # we zijn  benieuwd!
+    println(result_incoming)
+
+    # alle externe nodes zodeken van de gelabelde hyperedge die vervangen gaat worden
+    result_incoming_external_nodes = []
+
+    # hmmm dit zijn er natuurlijk niet zoveel...
+    # Er is maar 1 hyperedge om te vervangen
+    # Hier is het punt veel meer dat het aantal source nodes gelijk moet aan het aantla
+    # open internal source nodes
 
 
-
-
+    # we gaan de result source nodes af en mappen die naar een external node... op basis van de positie in de result array
+    # Ik kan de een op de ander mappen op basis van een dict.
+    # Een andere optie zou zijn om een tuple te maken..
+    # Dan krijg je een tuple van een tuple.
+    mapping_replacement_hyperedge_internal_source_nodes_to_external_nodes = Dict()
+    for (idx, (hyperedge, source_node_position)) in enumerate(result_incoming)
+        println((idx, hyperedge_to_replace.source[idx]))
+    end
 
     println("Do nothing!")
 end
