@@ -21,21 +21,22 @@ hyperedge replacment parser:
 # Voor nu fake ik de tokens uit de tokenizer gewoon
 # door middel van een string array
 
+const Node = String
 
 struct HyperEdge
     label::String
-    source::Array{String}
-    target::Array{String}
+    source::Array{Node}
+    target::Array{Node}
 end
 
 const HyperGraph = Array{HyperEdge}
 
 struct StateMachine
     hypergraph::HyperGraph
-    rules::Dict{String, Array{HyperEdge}}
+    rules::Dict{String, HyperGraph}
 end
 
-function find_hyperedge_in_hypergraph_by_label(hypergraph::Array{HyperEdge}, label::String)
+function find_hyperedge_in_hypergraph_by_label(hypergraph::HyperGraph, label::String)
     found = undef
     for hyperedge in hypergraph
         if hyperedge.label == label
