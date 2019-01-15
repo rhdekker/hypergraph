@@ -36,15 +36,8 @@ struct StateMachine
     rules::Dict{String, HyperGraph}
 end
 
-# TODO: this can be done with findfirst on array!
 function find_hyperedge_in_hypergraph_by_label(hypergraph::HyperGraph, label::String)
-    found = undef
-    for hyperedge in hypergraph
-        if hyperedge.label == label
-            found = hyperedge
-            break
-        end
-    end
+    found = first(filter(e -> e.label == label, hypergraph))
     return found
 end
 
