@@ -75,20 +75,16 @@ function he_replace(state_machine::StateMachine, label::String)
     # eerst groeperen we alle inkomende internal ndoes en inkomende external bij elkaar
 
     # Alle open source nodes van de righthandside van de replacement rule zoeken
-    result_source_nodes = [(he, idx) for he in hypergraph_to_replace_with for (idx, source) in enumerate(he.source) if source == "_"]
+    open_source_nodes = [(he, idx) for he in hypergraph_to_replace_with for (idx, source) in enumerate(he.source) if source == "_"]
 
     # we zijn  benieuwd!
-    println(result_source_nodes)
+    println(open_source_nodes)
 
     # alle externe nodes zodeken van de gelabelde hyperedge die vervangen gaat worden
-    result_incoming_external_nodes = []
-
     # hmmm dit zijn er natuurlijk niet zoveel...
     # Er is maar 1 hyperedge om te vervangen
     # Hier is het punt veel meer dat het aantal source nodes gelijk moet aan het aantla
     # open internal source nodes
-
-
     # we gaan de result source nodes af en mappen die naar een external node... op basis van de positie in de result array
     # Ik kan de een op de ander mappen op basis van een dict.
     # Een andere optie zou zijn om een tuple te maken..
@@ -98,8 +94,13 @@ function he_replace(state_machine::StateMachine, label::String)
     # and 2nd value of the triple is the position of the source node on that hyperedge
     # the 3rd value of the triple is the external closed vertex that there is a connection with
     # TODO: Maybe a named tuple is better here
-    map_internal_open_node_to_external_node = [(hyperedge, source_node_position, hyperedge_to_replace.source[idx]) for (idx, (hyperedge, source_node_position)) in enumerate(result_source_nodes)]
+    map_internal_open_node_to_external_node = [(hyperedge, source_node_position, hyperedge_to_replace.source[idx]) for (idx, (hyperedge, source_node_position)) in enumerate(open_source_nodes)]
     println(map_internal_open_node_to_external_node)
+
+    # nu moeten we hetzelfde doen voor de target nodes
+    open_target_nodes = [(he, idx) for he in hypergraph_to_replace_with for (idx, target) in enumerate(he.target) if target == "_"]
+    map_open_target_nodes_to_external_target_nodes = [(hyperedge, target_node_position, hyperedge_to_replace.target[idx]) for (idx, (hyperedge, target_node_position)) in enumerate(open_target_nodes)]
+    println(map_open_target_nodes_to_external_target_nodes)
 
     println("Do nothing!")
 end
