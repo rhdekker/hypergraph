@@ -74,27 +74,8 @@ function he_replace(state_machine::StateMachine, label::String)
 
     # eerst groeperen we alle inkomende internal ndoes en inkomende external bij elkaar
 
-    # TODO: liever de term source nodes gebruiken
-    # Alle open incoming nodes van de righthandside van de replacement rule zoeken
-    # TODO: moet ook kunnen als een list comprehension
-    result_source_nodes  = []
-    for he in hypergraph_to_replace_with
-        # for every he that has one or more internal nodes
-        # I want to know the hyperedge and the position of the internal node
-        # for that reason we use enumerate
-        # We create a tuple of the hyperedge and
-        for (idx, source) in enumerate(he.source)
-            if source == "_"
-                push!(result_source_nodes, (he, idx))
-           end
-        end
-    end
-
-    # kan dit ook als een list comprehension? Vast wel.
-    # maar de onderstaande werkt niet?!
-    # result_source_nodes = [  (he, idx) for he in hypergraph_to_replace_with, (idx, source) in enumerate(he.source)  if source == "_"]
-
-
+    # Alle open source nodes van de righthandside van de replacement rule zoeken
+    result_source_nodes = [(he, idx) for he in hypergraph_to_replace_with for (idx, source) in enumerate(he.source) if source == "_"]
 
     # we zijn  benieuwd!
     println(result_source_nodes)
@@ -112,10 +93,8 @@ function he_replace(state_machine::StateMachine, label::String)
     # Ik kan de een op de ander mappen op basis van een dict.
     # Een andere optie zou zijn om een tuple te maken..
     # Dan krijg je een tuple van een tuple.
-    mapping_replacement_hyperedge_internal_source_nodes_to_external_nodes = Dict()
-    for (idx, (hyperedge, source_node_position)) in enumerate(result_source_nodes)
-        println((idx, hyperedge_to_replace.source[idx]))
-    end
+    map_external_node_to_internal_open_node = [(hyperedge_to_replace.source[idx], hyperedge, source_node_position) for (idx, (hyperedge, source_node_position)) in enumerate(result_source_nodes)]
+    println(map_external_node_to_internal_open_node)
 
     println("Do nothing!")
 end
