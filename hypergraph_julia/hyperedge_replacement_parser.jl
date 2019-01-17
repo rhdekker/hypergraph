@@ -92,9 +92,14 @@ function he_replace(state_machine::StateMachine, label::String)
     # we gaan de result source nodes af en mappen die naar een external node... op basis van de positie in de result array
     # Ik kan de een op de ander mappen op basis van een dict.
     # Een andere optie zou zijn om een tuple te maken..
-    # Dan krijg je een tuple van een tuple.
-    map_external_node_to_internal_open_node = [(hyperedge_to_replace.source[idx], hyperedge, source_node_position) for (idx, (hyperedge, source_node_position)) in enumerate(result_source_nodes)]
-    println(map_external_node_to_internal_open_node)
+    # Dan krijg je een triple.
+
+    # the 1st value of the triple is the hyperedge of the graph that is used as the replacement
+    # and 2nd value of the triple is the position of the source node on that hyperedge
+    # the 3rd value of the triple is the external closed vertex that there is a connection with
+    # TODO: Maybe a named tuple is better here
+    map_internal_open_node_to_external_node = [(hyperedge, source_node_position, hyperedge_to_replace.source[idx]) for (idx, (hyperedge, source_node_position)) in enumerate(result_source_nodes)]
+    println(map_internal_open_node_to_external_node)
 
     println("Do nothing!")
 end
