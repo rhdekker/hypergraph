@@ -77,7 +77,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # TODO: liever de term source nodes gebruiken
     # Alle open incoming nodes van de righthandside van de replacement rule zoeken
     # TODO: moet ook kunnen als een list comprehension
-    result_incoming  = []
+    result_source_nodes  = []
     for he in hypergraph_to_replace_with
         # for every he that has one or more internal nodes
         # I want to know the hyperedge and the position of the internal node
@@ -85,13 +85,19 @@ function he_replace(state_machine::StateMachine, label::String)
         # We create a tuple of the hyperedge and
         for (idx, source) in enumerate(he.source)
             if source == "_"
-                push!(result_incoming, (he, idx))
+                push!(result_source_nodes, (he, idx))
            end
         end
     end
 
+    # kan dit ook als een list comprehension? Vast wel.
+    # maar de onderstaande werkt niet?!
+    # result_source_nodes = [  (he, idx) for he in hypergraph_to_replace_with, (idx, source) in enumerate(he.source)  if source == "_"]
+
+
+
     # we zijn  benieuwd!
-    println(result_incoming)
+    println(result_source_nodes)
 
     # alle externe nodes zodeken van de gelabelde hyperedge die vervangen gaat worden
     result_incoming_external_nodes = []
@@ -107,7 +113,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # Een andere optie zou zijn om een tuple te maken..
     # Dan krijg je een tuple van een tuple.
     mapping_replacement_hyperedge_internal_source_nodes_to_external_nodes = Dict()
-    for (idx, (hyperedge, source_node_position)) in enumerate(result_incoming)
+    for (idx, (hyperedge, source_node_position)) in enumerate(result_source_nodes)
         println((idx, hyperedge_to_replace.source[idx]))
     end
 
