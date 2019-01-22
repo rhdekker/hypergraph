@@ -70,6 +70,7 @@ function he_replace(state_machine::StateMachine, label::String)
 
     counter_open_source_node = 0
     counter_open_target_node = 0
+    copy_hyperedges::Array{HyperEdge} = []
     for edge in hypergraph_to_replace_with
         # ga over alle source node en kopieer als nodig
         copy_source_nodes::Array{Node} = []
@@ -95,9 +96,10 @@ function he_replace(state_machine::StateMachine, label::String)
             end
         end
         println(copy_target_nodes)
-
+        push!(copy_hyperedges, HyperEdge(edge.label, copy_source_nodes, copy_target_nodes))
     end
 
+    println(copy_hyperedges)
     println("Do nothing!")
 end
 
