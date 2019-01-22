@@ -51,7 +51,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # In een grotere graaf is een dictonary beter.
 
     hyperedge_to_replace=find_hyperedge_in_hypergraph_by_label(state_machine.hypergraph, label)
-    println(hyperedge_to_replace)
+    println("hyperedge to replace ", hyperedge_to_replace)
 
     # hmmm hoe weet je bij deze aanpak of de nodes goed geconnect zijn?
     # De enige manier om achter de nodes te komen is door over de edges te lopen en ze er dan
@@ -61,7 +61,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # eerst kijken of er wel een rule is voor ene zekr label
     # als niet, dan had de vorige al een exceptie gegooid
     hypergraph_to_replace_with = state_machine.rules[label]
-    println(hypergraph_to_replace_with)
+    println("hypergraph to replace with: ", hypergraph_to_replace_with)
 
     # we need to create a new subhypergraph
     # we go over all the hyperedges of the hypergraph to replace with
@@ -75,10 +75,10 @@ function he_replace(state_machine::StateMachine, label::String)
     # eerst groeperen we alle inkomende internal ndoes en inkomende external bij elkaar
 
     # Alle open source nodes van de righthandside van de replacement rule zoeken
-    open_source_nodes = [(he, idx) for he in hypergraph_to_replace_with for (idx, source) in enumerate(he.source) if source == "_"]
+    open_source_nodes = [(he, idx) for (he) in hypergraph_to_replace_with for (idx, source) in enumerate(he.source) if source == "_"]
 
     # we zijn  benieuwd!
-    println(open_source_nodes)
+    # println(open_source_nodes)
 
     # alle externe nodes zodeken van de gelabelde hyperedge die vervangen gaat worden
     # hmmm dit zijn er natuurlijk niet zoveel...
@@ -97,10 +97,42 @@ function he_replace(state_machine::StateMachine, label::String)
     map_internal_open_node_to_external_node = [(hyperedge, source_node_position, hyperedge_to_replace.source[idx]) for (idx, (hyperedge, source_node_position)) in enumerate(open_source_nodes)]
     println(map_internal_open_node_to_external_node)
 
+    # met makkelijkst is om hier een dictionary van te maken
+    # Ik wil de eerste twee velden van de tuple maPPEN als de key en de derde als de value.
+    m = Dict([(tuple[1], tuple[2]) => tuple[3] for tuple in map_internal_open_node_to_external_node])
+    println(m)
+
+
+
+
+
+
+
+
+
     # nu moeten we hetzelfde doen voor de target nodes
     open_target_nodes = [(he, idx) for he in hypergraph_to_replace_with for (idx, target) in enumerate(he.target) if target == "_"]
     map_open_target_nodes_to_external_target_nodes = [(hyperedge, target_node_position, hyperedge_to_replace.target[idx]) for (idx, (hyperedge, target_node_position)) in enumerate(open_target_nodes)]
-    println(map_open_target_nodes_to_external_target_nodes)
+    # println(map_open_target_nodes_to_external_target_nodes)
+
+
+#=
+    # er zit nog een uitdaging dat we met deze aanpak alleen tuples hebben van hyperedges en posities die daadwerkelijk open nodes hebben.
+    # Voor het daadwerkelijke replacement proces is dit lastig aangezien we een kopie moeten maken van de RHS van de rule om de nieuwe hyperedges daadwerkelijk in
+    # de graaf te plaatsen. Dat betreft dus ook de niet open nodes.
+
+    # We zouden alle source en target nodes van de hyperedge een nummer kunnen geven.
+
+    Je hebt eigenlijk twee vormen van nummering.
+    Een oplopende voor alle nodes
+    en een oplopende voor alleen de open nodes
+    Een andere mogelijkheid is een dictionary for the open nodes
+    ophet moment dat je dan alle nodes afloopt check je de dictionary
+    maar dan is de hyperedge plus de positie een indicator
+    Dat is niet lekker hashen.
+    Waarschijnlijk kan het wel (een tuple hashen) maar willen we het niet.
+
+=#
 
     println("Do nothing!")
 end
