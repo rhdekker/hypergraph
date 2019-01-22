@@ -42,6 +42,14 @@ function find_hyperedge_in_hypergraph_by_label(hypergraph::HyperGraph, label::St
     return found
 end
 
+# since the hypergraph is just an array and not a set or a dict we can not just tell the array
+# to remove an item
+# we first need to find the index.
+function delete_hyperedge_in_hypergraph(hypergraph::HyperGraph, hyperedge::HyperEdge)
+    index = findfirst(e -> e == hyperedge, hypergraph)
+    deleteat!(hypergraph, index)
+end
+
 function he_replace(state_machine::StateMachine, label::String)
 
     # nu moeten we de ene interne source node van de righthandside van de rule vervangen door de eerse
@@ -52,7 +60,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # In een grotere graaf is een dictonary beter.
 
     hyperedge_to_replace=find_hyperedge_in_hypergraph_by_label(state_machine.hypergraph, label)
-    println("hyperedge to replace ", hyperedge_to_replace)
+    # println("hyperedge to replace ", hyperedge_to_replace)
 
     # hmmm hoe weet je bij deze aanpak of de nodes goed geconnect zijn?
     # De enige manier om achter de nodes te komen is door over de edges te lopen en ze er dan
@@ -62,7 +70,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # eerst kijken of er wel een rule is voor ene zekr label
     # als niet, dan had de vorige al een exceptie gegooid
     hypergraph_to_replace_with = state_machine.rules[label]
-    println("hypergraph to replace with: ", hypergraph_to_replace_with)
+    # println("hypergraph to replace with: ", hypergraph_to_replace_with)
 
     # maak een kopie met daarin de open source en target nodes vervangen
     # ga over alle hyperedges in the hypergraph
@@ -83,7 +91,7 @@ function he_replace(state_machine::StateMachine, label::String)
                 push!(copy_source_nodes, source_node)
             end
         end
-        println(copy_source_nodes)
+#         println(copy_source_nodes)
         # ga over alle target node en kopieer als nodig
         copy_target_nodes::Array{Node} = []
         for target_node in edge.target
@@ -95,12 +103,21 @@ function he_replace(state_machine::StateMachine, label::String)
                 push!(copy_target_nodes, target_node)
             end
         end
-        println(copy_target_nodes)
+#         println(copy_target_nodes)
         push!(copy_hyperedges, HyperEdge(edge.label, copy_source_nodes, copy_target_nodes))
     end
 
-    println(copy_hyperedges)
-    println("Do nothing!")
+    # println(copy_hyperedges)
+
+    # We delete the old hyperedge,
+    delete_hyperedge_in_hypergraph(state_machine.hypergraph, hyperedge_to_replace)
+
+    # and add the new hyperedges to the internal hypergraph of the statemachine.
+    for edge in copy_hyperedges
+        push!(state_machine.hypergraph, edge)
+    end
+    println("result: ", state_machine.hypergraph)
+
 end
 
 function main()
@@ -130,6 +147,7 @@ function main()
     # want daar moeten we echte replcament voor doen
     # hmm daar m oet ik zowel de hg als de rules meegeven -> state machine
 
+    println(state_machine.hypergraph)
     he_replace(state_machine, "S")
 
 end
