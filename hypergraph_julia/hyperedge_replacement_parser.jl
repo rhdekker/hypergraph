@@ -102,9 +102,10 @@ function he_replace(state_machine::StateMachine, label::String)
     m = Dict([(tuple[1], tuple[2]) => tuple[3] for tuple in map_internal_open_node_to_external_node])
     println(m)
 
-
-
-
+    # Nu moeten we alle edges en de bijbehorende source nodes af ... als het niet in de dictionary voorkomt maken we simpelweg
+    # een kopie. Anders linken we naar een bestaande node.
+    n = Dict([(he,idx) => (he, idx) in keys(m) ? m[(he, idx)] : source for (he) in hypergraph_to_replace_with for (idx, source) in enumerate(he.source)])
+    println(n)
 
 
 
