@@ -76,32 +76,22 @@ function he_replace(state_machine::StateMachine, label::String)
     # ga over alle hyperedges in the hypergraph
     # hou twee counters bij: een voor de open source nodes en een voor de open target nodes
 
-    iter_source_nodes = Iterators.Stateful(hyperedge_to_replace.source)
-    iter_target_nodes = Iterators.Stateful(hyperedge_to_replace.target)
+    iter_source_external_nodes = Iterators.Stateful(hyperedge_to_replace.source)
+    iter_target_external_nodes = Iterators.Stateful(hyperedge_to_replace.target)
     copy_hyperedges::Array{HyperEdge} = []
     for edge in hypergraph_to_replace_with
         # ga over alle source node en kopieer als nodig
         copy_source_nodes::Array{Node} = []
         for source_node in edge.source
-            # check source node
-            if source_node == "_"
-                a = popfirst!(iter_source_nodes)
-                push!(copy_source_nodes, a)
-            else
-                push!(copy_source_nodes, source_node)
-            end
+            a = source_node == "_" ? popfirst!(iter_source_external_nodes) : source_node
+            push!(copy_source_nodes, a)
         end
 #         println(copy_source_nodes)
         # ga over alle target node en kopieer als nodig
         copy_target_nodes::Array{Node} = []
         for target_node in edge.target
-            # check target node
-            if target_node == "_"
-                a = popfirst!(iter_target_nodes)
-                push!(copy_target_nodes, a)
-            else
-                push!(copy_target_nodes, target_node)
-            end
+            a = target_node == "_" ? popfirst!(iter_target_external_nodes) : target_node
+            push!(copy_target_nodes, a)
         end
 #         println(copy_target_nodes)
         push!(copy_hyperedges, HyperEdge(edge.label, copy_source_nodes, copy_target_nodes))
