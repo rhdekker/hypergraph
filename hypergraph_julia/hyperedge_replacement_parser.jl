@@ -79,16 +79,14 @@ function he_replace(state_machine::StateMachine, label::String)
     iter_source_external_nodes = Iterators.Stateful(hyperedge_to_replace.source)
     iter_target_external_nodes = Iterators.Stateful(hyperedge_to_replace.target)
 
-    copy_hyperedges::Array{HyperEdge} = []
-    for edge in hypergraph_to_replace_with
-        # ga over alle source node en kopieer als nodig
+    # ga over alle source node en kopieer als nodig
+    # ga over alle target node en kopieer als nodig
+    copy_hyperedges = map(hypergraph_to_replace_with) do edge
         copy_source_nodes = [source_node == "_" ? popfirst!(iter_source_external_nodes) : source_node for source_node in edge.source]
-        # ga over alle target node en kopieer als nodig
         copy_target_nodes = [target_node == "_" ? popfirst!(iter_target_external_nodes) : target_node for target_node in edge.target]
-#         println(copy_source_nodes)
-#         println(copy_target_nodes)
-        push!(copy_hyperedges, HyperEdge(edge.label, copy_source_nodes, copy_target_nodes))
+        return HyperEdge(edge.label, copy_source_nodes, copy_target_nodes)
     end
+
 
     # println(copy_hyperedges)
 
