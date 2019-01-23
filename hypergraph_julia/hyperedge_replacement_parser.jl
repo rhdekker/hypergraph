@@ -113,7 +113,10 @@ function main()
 
     # now we need to create a set of rules to do the replacement with
     # in the rules we map a label of a hyperedge to a hypergraph
-    rules = Dict{String, HyperGraph}("S" => [HyperEdge("JOHN", ["_"], ["3"]), HyperEdge("LOVES",["3"], ["_"])])
+    rules = Dict{String, HyperGraph}(
+        "S" => [HyperEdge("JOHN", ["_"], ["_"])],
+        "JOHN" => [HyperEdge("John", ["_"], ["3"]),  HyperEdge("LOVES",["3"], ["_"])]
+    )
     # Hier komen nog veel meer rules
 
 
@@ -129,6 +132,7 @@ function main()
 
     println(state_machine.hypergraph)
     he_replace(state_machine, "S")
+    he_replace(state_machine,  "JOHN")
 
 end
 
