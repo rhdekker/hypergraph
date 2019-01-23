@@ -94,9 +94,8 @@ function he_replace(state_machine::StateMachine, label::String)
     delete_hyperedge_in_hypergraph(state_machine.hypergraph, hyperedge_to_replace)
 
     # and add the new hyperedges to the internal hypergraph of the statemachine.
-    for edge in copy_hyperedges
-        push!(state_machine.hypergraph, edge)
-    end
+    append!(state_machine.hypergraph, copy_hyperedges)
+
     println("result: ", state_machine.hypergraph)
 
 end
