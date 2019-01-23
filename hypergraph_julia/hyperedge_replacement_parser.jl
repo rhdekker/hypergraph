@@ -106,10 +106,9 @@ function main()
     # but for now we don't care about that
     tokens = String["John", "loves", "Mary"]
 
-
     # create the initial state of the state machine
-    hg = HyperEdge[]
-    push!(hg, HyperEdge("S", ["1"], ["2"]))
+    # hmmm why does HyperGraph() not work?
+    hg = HyperEdge[HyperEdge("S", ["1"], ["2"])]
 
     # now we need to create a set of rules to do the replacement with
     # in the rules we map a label of a hyperedge to a hypergraph
