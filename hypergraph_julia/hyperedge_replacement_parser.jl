@@ -76,8 +76,8 @@ function he_replace(state_machine::StateMachine, label::String)
     # ga over alle hyperedges in the hypergraph
     # hou twee counters bij: een voor de open source nodes en een voor de open target nodes
 
-    counter_open_source_node = 0
-    counter_open_target_node = 0
+    (next_source_node, source_state) = iterate(hyperedge_to_replace.source)
+    (next_target_node, target_state) = iterate(hyperedge_to_replace.target)
     copy_hyperedges::Array{HyperEdge} = []
     for edge in hypergraph_to_replace_with
         # ga over alle source node en kopieer als nodig
@@ -85,8 +85,9 @@ function he_replace(state_machine::StateMachine, label::String)
         for source_node in edge.source
             # check source node
             if source_node == "_"
-                counter_open_source_node += 1
-                push!(copy_source_nodes, hyperedge_to_replace.source[counter_open_source_node])
+                a = next_source_node
+                (next_source_node, source_state)=iterate(source_state)
+                push!(copy_source_nodes, a)
             else
                 push!(copy_source_nodes, source_node)
             end
@@ -97,8 +98,9 @@ function he_replace(state_machine::StateMachine, label::String)
         for target_node in edge.target
             # check target node
             if target_node == "_"
-                counter_open_target_node += 1
-                push!(copy_target_nodes, hyperedge_to_replace.target[counter_open_target_node])
+                a = next_target_node
+                (next_target_node, target_state)=iterate(target_state)
+                push!(copy_target_nodes, a)
             else
                 push!(copy_target_nodes, target_node)
             end
@@ -133,7 +135,7 @@ function main()
 
     # now we need to create a set of rules to do the replacement with
     # in the rules we map a label of a hyperedge to a hypergraph
-    rules = Dict{String, Array{HyperEdge}}("S" => [HyperEdge("JOHN", ["_"], ["_"])])
+    rules = Dict{String, HyperGraph}("S" => [HyperEdge("JOHN", ["_"], ["3"]), HyperEdge("LOVES",["3"], ["_"])])
     # Hier komen nog veel meer rules
 
 
