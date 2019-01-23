@@ -5,7 +5,7 @@ hyperedge replacment parser:
 - Date: 2019-01-14
 =#
 
-using DataStructures
+# using DataStructures
 
 # We hebben een hypergraph definitie nodig
 # Het simpelste om te doen is is een lijst van hyperedges
@@ -45,7 +45,7 @@ end
 # since the hypergraph is just an array and not a set or a dict we can not just tell the array
 # to remove an item
 # we first need to find the index.
-function delete_hyperedge_in_hypergraph(hypergraph::HyperGraph, hyperedge::HyperEdge)
+function delete_hyperedge_in_hypergraph!(hypergraph::HyperGraph, hyperedge::HyperEdge)
     index = findfirst(e -> e == hyperedge, hypergraph)
     deleteat!(hypergraph, index)
 end
@@ -91,7 +91,7 @@ function he_replace(state_machine::StateMachine, label::String)
     # println(copy_hyperedges)
 
     # We delete the old hyperedge,
-    delete_hyperedge_in_hypergraph(state_machine.hypergraph, hyperedge_to_replace)
+    delete_hyperedge_in_hypergraph!(state_machine.hypergraph, hyperedge_to_replace)
 
     # and add the new hyperedges to the internal hypergraph of the statemachine.
     append!(state_machine.hypergraph, copy_hyperedges)
