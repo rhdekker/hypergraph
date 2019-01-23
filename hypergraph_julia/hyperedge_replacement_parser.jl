@@ -116,7 +116,8 @@ function main()
     rules = Dict{String, HyperGraph}(
         "S" => [HyperEdge("JOHN", ["_"], ["_"])],
         "JOHN" => [HyperEdge("John", ["_"], ["3"]),  HyperEdge("LOVES",["3"], ["_"])],
-        "LOVES" => [HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])]
+        "LOVES" => [HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])],
+        "MARY" => [HyperEdge("Mary", ["_"], ["_"])]
     )
     # Hier komen nog veel meer rules
 
@@ -135,6 +136,7 @@ function main()
     he_replace(state_machine, "S")
     he_replace(state_machine,  "JOHN")
     he_replace(state_machine,  "LOVES")
+    he_replace(state_machine,  "MARY")
 
 end
 
