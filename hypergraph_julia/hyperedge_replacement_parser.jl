@@ -18,7 +18,7 @@ using DataStructures
 # Dan vervangen we een voor een non terminal dooor een terminal
 # het is even de vraag of source en target strings of ints moeten zijn
 # liever zou ik natuurlijks intss hebben, maar hoe kan ik dan de intenre edges aangeven?
-# dat wordt lastig, dsu vandaar strings voor dit moment
+# dat wordt lastig, dus vandaar strings voor dit moment
 # Voor nu fake ik de tokens uit de tokenizer gewoon
 # door middel van een string array
 
@@ -74,7 +74,7 @@ function he_replace(state_machine::StateMachine, label::String)
 
     # maak een kopie met daarin de open source en target nodes vervangen
     # ga over alle hyperedges in the hypergraph
-    # hou twee counters bij: een voor de open source nodes en een voor de open target nodes
+    # hou twee iterators bij: een voor de open source nodes en een voor de open target nodes
 
     iter_source_external_nodes = Iterators.Stateful(hyperedge_to_replace.source)
     iter_target_external_nodes = Iterators.Stateful(hyperedge_to_replace.target)
@@ -123,13 +123,13 @@ function main()
 
     # hier maken we de state machine aan
     state_machine = StateMachine(hg, rules)
-    # TODO: misschien mot e rbij de statemachine ook nog een pointerr nar rr de huidige
+    # TODO: misschien moet er bij de statemachine ook nog een pointer naar de huidige
     # non temrinal
 
     # om te beginnen moeten we nu de initial state vervangen door de state in de S rule
     # Dat is al een leuke rule
     # want daar moeten we echte replcament voor doen
-    # hmm daar m oet ik zowel de hg als de rules meegeven -> state machine
+    # hmm daar moet ik zowel de hg als de rules meegeven -> state machine
 
     println(state_machine.hypergraph)
     he_replace(state_machine, "S")
