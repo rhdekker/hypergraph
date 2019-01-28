@@ -30,7 +30,23 @@ struct HyperEdge
     target::Array{Node}
 end
 
-const HyperGraph = Array{HyperEdge}
+struct HyperGraph <: AbstractArray{HyperEdge, 1}
+    edges::Array{HyperEdge}
+end
+
+# minimum methods for abstract array; I delegate everything to the edges array
+Base.size(HG::HyperGraph) = size(HG.edges)
+
+Base.IndexStyle(::Type{<:HyperGraph}) = IndexLinear()
+
+Base.getindex(HG::HyperGraph, i::Int) = getindex(HG.edges, i)
+
+# make the hypergraph mutable
+Base.deleteat!(HG::HyperGraph, i::Integer) = deleteat!(HG.edges, i)
+
+Base.append!(HG::HyperGraph, edges::Array{HyperEdge}) = append!(HG.edges, edges)
+
+
 
 struct StateMachine
     hypergraph::HyperGraph
@@ -107,16 +123,15 @@ function main()
     tokens = String["John", "loves", "Mary"]
 
     # create the initial state of the state machine
-    # hmmm why does HyperGraph() not work?
-    hg = HyperEdge[HyperEdge("S", ["1"], ["2"])]
+    hg = HyperGraph(HyperEdge[HyperEdge("S", ["1"], ["2"])])
 
     # now we need to create a set of rules to do the replacement with
     # in the rules we map a label of a hyperedge to a hypergraph
     rules = Dict{String, HyperGraph}(
-        "S" => [HyperEdge("JOHN", ["_"], ["_"])],
-        "JOHN" => [HyperEdge("John", ["_"], ["3"]),  HyperEdge("LOVES",["3"], ["_"])],
-        "LOVES" => [HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])],
-        "MARY" => [HyperEdge("Mary", ["_"], ["_"])]
+        "S" => HyperGraph([HyperEdge("JOHN", ["_"], ["_"])]),
+        "JOHN" => HyperGraph([HyperEdge("John", ["_"], ["3"]),  HyperEdge("LOVES",["3"], ["_"])]),
+        "LOVES" => HyperGraph([HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])]),
+        "MARY" => HyperGraph([HyperEdge("Mary", ["_"], ["_"])])
     )
     # Hier komen nog veel meer rules
 
