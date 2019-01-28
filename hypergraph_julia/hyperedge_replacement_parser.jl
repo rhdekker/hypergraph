@@ -11,27 +11,25 @@ hyperedge replacment parser:
 # Het simpelste om te doen is is een lijst van hyperedges
 # een hyperedge heeft een label en georderede lijst van source en target nodes.
 # De hypergraph in de parser begint in de staat o - [S] - o
-# NOTE: als S later gebruikt wordt als tag kunnen we natuurlijk de naam veranderne in star tof iets
+# NOTE: als S later gebruikt wordt als tag kunnen we natuurlijk de naam veranderen in start of iets
 # dergelijks
 # Dan verandert de start regel de hele boel in drie non terminals
 # Mary loves John
 # Dan vervangen we een voor een non terminal dooor een terminal
 # het is even de vraag of source en target strings of ints moeten zijn
-# liever zou ik natuurlijks intss hebben, maar hoe kan ik dan de intenre edges aangeven?
+# liever zou ik natuurlijks intss hebben, maar hoe kan ik dan de interne edges aangeven?
 # dat wordt lastig, dus vandaar strings voor dit moment
 # Voor nu fake ik de tokens uit de tokenizer gewoon
 # door middel van een string array
 
-const Node = String
-
-struct HyperEdge
+struct HyperEdge{N}
     label::String
-    source::Array{Node}
-    target::Array{Node}
+    source::Array{N}
+    target::Array{N}
 end
 
-struct HyperGraph <: AbstractArray{HyperEdge, 1}
-    edges::Array{HyperEdge}
+struct HyperGraph{N} <: AbstractArray{HyperEdge, 1}
+    edges::Array{HyperEdge{N}}
 end
 
 # minimum methods for abstract array; I delegate everything to the edges array
@@ -44,7 +42,7 @@ Base.getindex(HG::HyperGraph, i::Int) = getindex(HG.edges, i)
 # make the hypergraph mutable
 Base.deleteat!(HG::HyperGraph, i::Integer) = deleteat!(HG.edges, i)
 
-Base.append!(HG::HyperGraph, edges::Array{HyperEdge}) = append!(HG.edges, edges)
+Base.append!(HG::HyperGraph, edges::Array{HyperEdge{N}}) where N = append!(HG.edges, edges)
 
 
 
@@ -123,11 +121,11 @@ function main()
     tokens = String["John", "loves", "Mary"]
 
     # create the initial state of the state machine
-    hg = HyperGraph(HyperEdge[HyperEdge("S", ["1"], ["2"])])
+    hg = HyperGraph{String}(HyperEdge[HyperEdge("S", ["1"], ["2"])])
 
     # now we need to create a set of rules to do the replacement with
     # in the rules we map a label of a hyperedge to a hypergraph
-    rules = Dict{String, HyperGraph}(
+    rules = Dict{String, HyperGraph{String}}(
         "S" => HyperGraph([HyperEdge("JOHN", ["_"], ["_"])]),
         "JOHN" => HyperGraph([HyperEdge("John", ["_"], ["3"]),  HyperEdge("LOVES",["3"], ["_"])]),
         "LOVES" => HyperGraph([HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])]),
